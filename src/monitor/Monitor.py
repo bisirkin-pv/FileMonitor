@@ -8,7 +8,7 @@ class Monitor:
     """
     def __init__(self):
         self._state = 0     # состояние сервера  (1 - запущен, 0 - остановлен, другое - ошибка)
-        self._timeout = 10  # таймаут между итерациями (секунд)
+        self._timeout = 5  # таймаут между итерациями (секунд)
 
     def start(self):
         """
@@ -16,7 +16,7 @@ class Monitor:
         :return:
         """
         self._state = 1 if self._state == 0 else self._state
-        server = Server("Monitor", self).start()
+        server = Server("FileMonitor", self).start()
 
     def stop(self):
         """
@@ -34,4 +34,17 @@ class Monitor:
         return self._state
 
     def get_timeout(self):
+        """
+        Возвращает текущий таймаут выполения
+        :return: timeout (int) second
+        """
         return self._timeout
+
+    def set_timeout(self, sec):
+        """
+        Устанавливает таймаут
+        :param sec: (int) second
+        :return:
+        """
+        self._timeout = sec
+
