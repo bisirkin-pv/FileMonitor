@@ -18,6 +18,8 @@ class Server(Thread):
         msg = "%s is running" % self.name
         print(msg)
         self.check()
+        msg = "%s is stopped" % self.name
+        print(msg)
 
     def check(self):
         while self._monitor._state == 1:
