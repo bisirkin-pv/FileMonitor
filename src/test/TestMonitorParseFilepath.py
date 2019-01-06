@@ -1,6 +1,5 @@
 import unittest
 from src.monitor.Monitor import Monitor
-import time
 import os
 
 
