@@ -21,6 +21,7 @@ class FileMonitor:
                         'stop': self.stop_server,
                         'start': self.run_server,
                         'exit': self._stop_wait,
+                        'help': self._print_help,
                         }
 
     def _param_parser(self):
@@ -37,15 +38,22 @@ class FileMonitor:
         Запуск мониторинга
         :return:
         """
-        self._monitor.start()
+        if self._monitor.get_state() == 0:
+            self._monitor.start()
+            self._timeout()
+        else:
+            print("Server is already running")
 
     def stop_server(self):
         """
         Остановка мониторинга
         :return:
         """
-        self._monitor.stop()
-        time.sleep(self._monitor.get_timeout())
+        if self._monitor.get_state() == 1:
+            self._monitor.stop()
+            self._timeout()
+        else:
+            print("Server is already stopped")
 
     def wait_input(self):
         """
@@ -65,12 +73,29 @@ class FileMonitor:
         :return:
         """
         self._isWait = False
-        if self._monitor.get_state() == 1:
-            self.stop_server()
+        self.stop_server()
+
+    def _timeout(self):
+        """
+        Пауза выполенения
+        :return:
+        """
+        time.sleep(self._monitor.get_timeout())
+
+    @staticmethod
+    def _print_help():
+        """
+        Отображает справочную информацию по командам
+        :return:
+        """
+        print("Available command:"
+              "\n\tstart - Starting the monitoring server"
+              "\n\tstop - Stopping the monitoring server"
+              "\n\texit - Exit application"
+              )
 
 
 if __name__ == '__main__':
     file_monitor = FileMonitor(sys.argv[1:])
     file_monitor.run_server()
-    print("start")
     file_monitor.wait_input()
