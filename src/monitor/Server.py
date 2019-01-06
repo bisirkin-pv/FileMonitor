@@ -23,5 +23,5 @@ class Server(Thread):
 
     def check(self):
         while self._monitor._state == 1:
-            print("run")
+            #print("run")
             time.sleep(self._monitor.get_timeout())
