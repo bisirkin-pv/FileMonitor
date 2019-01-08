@@ -11,7 +11,9 @@ class TestMonitorWorking(unittest.TestCase):
 
     # проверяем работоспособность цикла сервера
     def test_working_monitoring(self):
-
+        state = self.monitor.get_state()
+        self.assertEqual(state.get('state'), 1)
+        self.assertGreater(state.get('file_count'), -1)
         time.sleep(2)
         self.monitor.set_timeout(2)
         # time.sleep(10)

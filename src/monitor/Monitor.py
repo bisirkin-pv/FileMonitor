@@ -23,6 +23,7 @@ class Monitor:
         :return:
         """
         self._state = 1 if self._state == 0 else self._state
+        self.create_file_list()
         server = Server("FileMonitor", self).start()
 
     def stop(self):
@@ -36,9 +37,9 @@ class Monitor:
     def get_state(self):
         """
         Возвращает текущее состояние сервера
-        :return: _state (int)
+        :return: {state: int, file_count: int}
         """
-        return self._state
+        return dict(state=self._state, file_count=len(self._files))
 
     def get_timeout(self):
         """

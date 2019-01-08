@@ -2,6 +2,8 @@ from src.monitor.Monitor import Monitor
 import sys
 import argparse
 import time
+import os
+
 
 class FileMonitor:
     """
@@ -20,6 +22,8 @@ class FileMonitor:
         self._command = {
                         'stop': self.stop_server,
                         'start': self.run_server,
+                        'state': self.state_server,
+                        'list': self.monitoring_file_list,
                         'exit': self._stop_wait,
                         'help': self._print_help,
                         }
@@ -38,7 +42,7 @@ class FileMonitor:
         Запуск мониторинга
         :return:
         """
-        if self._monitor.get_state() == 0:
+        if self._monitor.get_state().get('state') == 0:
             self._monitor.start()
             self._timeout()
         else:
@@ -49,11 +53,31 @@ class FileMonitor:
         Остановка мониторинга
         :return:
         """
-        if self._monitor.get_state() == 1:
+        if self._monitor.get_state().get('state') == 1:
             self._monitor.stop()
             self._timeout()
         else:
             print("Server is already stopped")
+
+    def state_server(self):
+        """
+        Отображает информацию по состоянию сервера
+        :return:
+        """
+        state = self._monitor.get_state()
+        print("State: {0}\nWatch: {1} file(s)".format(
+                  'active' if state.get('state') == 1 else 'inactive',
+                  state.get('file_count')
+                  )
+              )
+
+    def monitoring_file_list(self):
+        """
+        Отображает список файлов под наблюдением
+        :return:
+        """
+        for file in self._monitor.get_file_list():
+            print("Filename: {0}".format(os.path.join(file.path, file.name)))
 
     def wait_input(self):
         """
@@ -90,8 +114,10 @@ class FileMonitor:
         """
         print("Available command:"
               "\n\tstart - Starting the monitoring server"
-              "\n\tstop - Stopping the monitoring server"
-              "\n\texit - Exit application"
+              "\n\tstop  - Stopping the monitoring server"
+              "\n\tstate - Current state and count of monitored files"
+              "\n\tlist  - List of monitored files"
+              "\n\texit  - Exit application"
               )
 
 
