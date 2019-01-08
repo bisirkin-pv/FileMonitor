@@ -80,7 +80,34 @@ class Monitor:
 
     @staticmethod
     def filter_file(file, reg):
+        """
+        Проверка на соответствие регулярному выражению
+        :param file: название файла
+        :param reg: регулярное выражение
+        :return: 1- совпадение найдено иначе 0
+        """
         pattern = re.compile(reg)
         return 1 if pattern.match(file) is not None else 0
 
+    def check(self):
+        """
+        Производит проверку на изменение файла
+        :return:
+        """
+        for i in range(len(self._files)):
+            full_name = os.path.join(self._files[i].path, self._files[i].name)
+            changed = time.ctime(os.path.getmtime(full_name))
+            if changed != self._files[i].change_date:
+                self.action(full_name)
+                self._files[i] = FileProperty(self._files[i].path,
+                                              self._files[i].name,
+                                              changed
+                                              )
 
+    def action(self, file):
+        """
+        Выполняет заданные действия
+        :param file: название файла
+        :return:
+        """
+        print("File {0} was changed".format(file))
