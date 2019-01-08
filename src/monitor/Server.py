@@ -3,10 +3,6 @@ from threading import Thread
 
 
 class Server(Thread):
-    """
-    A threading example
-    """
-
     def __init__(self, name, monitor):
         """Инициализация потока"""
         Thread.__init__(self)
@@ -22,6 +18,7 @@ class Server(Thread):
         print(msg)
 
     def check(self):
+        """Проверка изменения файлов"""
         while self._monitor._state == 1:
             self._monitor.check()
             time.sleep(self._monitor.get_timeout())

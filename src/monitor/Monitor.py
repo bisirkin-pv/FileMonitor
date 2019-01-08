@@ -4,8 +4,7 @@ import re
 from src.monitor.FileProperty import FileProperty
 import os
 from pathlib import Path
-import datetime
-
+from src.monitor.Action import Action
 
 class Monitor:
     """
@@ -110,4 +109,5 @@ class Monitor:
         :param file: название файла
         :return:
         """
-        print("File {0} was changed".format(file))
+        Action(file).run()
+        # print("File {0} was changed".format(file))
