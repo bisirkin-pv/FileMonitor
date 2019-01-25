@@ -30,6 +30,8 @@ class FileMonitor:
                         'refresh': self.refresh,
                         'set_command': self.set_action_command,
                         'command': self.get_action_command,
+                        'set_timeout': self.set_timeout,
+                        'timeout': self.get_timeout,
                         }
 
     def _param_parser(self):
@@ -131,9 +133,29 @@ class FileMonitor:
             action.set_command(cmd)
 
     def get_action_command(self):
+        """
+        Отображает текущую комманду
+        :return:
+        """
         action = self._monitor.get_action()
         if hasattr(action, 'get_command'):
             print("Current command: {}".format(action.get_command()))
+
+    def set_timeout(self):
+        """
+        Устанавливает таймаут опроса изменения файлов
+        :param sec: секунды задержки(должны быть больше 0)
+        :return:
+        """
+        try:
+            sec = int(input("Input seconds:"))
+            if sec > 0:
+                self._monitor.set_timeout(sec)
+        except ValueError as e:
+            print("Value mast by integer")
+
+    def get_timeout(self):
+        print("Current timeout: {}".format(self._monitor.get_timeout()))
 
     @staticmethod
     def _print_help():
@@ -149,6 +171,8 @@ class FileMonitor:
               "\n\trefresh      - Apply the command to all files"
               "\n\tcommand      - Current command"
               "\n\tset_command  - Apply the command"
+              "\n\tset_timeout  - Apply check timeout"
+              "\n\ttimeout      - Current timeout"
               "\n\texit         - Exit application"
               )
 
