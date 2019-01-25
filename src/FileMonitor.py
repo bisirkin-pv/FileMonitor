@@ -3,6 +3,7 @@ import sys
 import argparse
 import time
 import os
+from src.monitor.Action import Action
 
 
 class FileMonitor:
@@ -26,6 +27,9 @@ class FileMonitor:
                         'list': self.monitoring_file_list,
                         'exit': self._stop_wait,
                         'help': self._print_help,
+                        'refresh': self.refresh,
+                        'set_command': self.set_action_command,
+                        'command': self.get_action_command,
                         }
 
     def _param_parser(self):
@@ -43,6 +47,7 @@ class FileMonitor:
         :return:
         """
         if self._monitor.get_state().get('state') == 0:
+            self._monitor.set_action(Action)
             self._monitor.start()
             self._timeout()
         else:
@@ -106,6 +111,30 @@ class FileMonitor:
         """
         time.sleep(self._monitor.get_timeout())
 
+    def refresh(self):
+        """
+        Выполнение команды для всех файлов
+        :return:
+        """
+        self._monitor.refresh()
+
+    def set_action_command(self):
+        """
+        Команда для выполенения
+        !!! Является не безопасной, использовать только локально
+        :param cmd: команда для bash
+        :return:
+        """
+        action = self._monitor.get_action()
+        if hasattr(action, 'set_command'):
+            cmd = input("Input command:")
+            action.set_command(cmd)
+
+    def get_action_command(self):
+        action = self._monitor.get_action()
+        if hasattr(action, 'get_command'):
+            print("Current command: {}".format(action.get_command()))
+
     @staticmethod
     def _print_help():
         """
@@ -113,11 +142,14 @@ class FileMonitor:
         :return:
         """
         print("Available command:"
-              "\n\tstart - Starting the monitoring server"
-              "\n\tstop  - Stopping the monitoring server"
-              "\n\tstate - Current state and count of monitored files"
-              "\n\tlist  - List of monitored files"
-              "\n\texit  - Exit application"
+              "\n\tstart        - Starting the monitoring server"
+              "\n\tstop         - Stopping the monitoring server"
+              "\n\tstate        - Current state and count of monitored files"
+              "\n\tlist         - List of monitored files"
+              "\n\trefresh      - Apply the command to all files"
+              "\n\tcommand      - Current command"
+              "\n\tset_command  - Apply the command"
+              "\n\texit         - Exit application"
               )
 
 

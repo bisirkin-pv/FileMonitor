@@ -4,7 +4,8 @@ import re
 from src.monitor.FileProperty import FileProperty
 import os
 from pathlib import Path
-from src.monitor.Action import Action
+from src.monitor.DefaultAction import DefaultAction
+
 
 class Monitor:
     """
@@ -15,6 +16,7 @@ class Monitor:
         self._timeout = 5           # таймаут между итерациями (секунд)
         self._re_files = re_files   # регулярное выражение поиска файлов
         self._files = []            # список параметров файлов
+        self._action = DefaultAction()     # класс выполняющий действия, можно менять
 
     def start(self):
         """
@@ -103,11 +105,35 @@ class Monitor:
                                               changed
                                               )
 
+    def refresh(self):
+        """
+        Принудительное выполнение команды для всех файлов
+        :return:
+        """
+        for i in range(len(self._files)):
+            full_name = os.path.join(self._files[i].path, self._files[i].name)
+            self.action(full_name)
+
+    def set_action(self, Cls):
+        """
+        Присваивает класс обработки
+        :param Cls: класс обработки
+        :return:
+        """
+        self._action = Cls()
+
+    def get_action(self):
+        """
+        Возвращет класс действия
+        :return:
+        """
+        return self._action
+
     def action(self, file):
         """
         Выполняет заданные действия
         :param file: название файла
         :return:
         """
-        Action(file).run()
+        self._action.run(file)
         # print("File {0} was changed".format(file))
