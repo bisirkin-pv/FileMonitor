@@ -110,6 +110,7 @@ class Monitor:
         Принудительное выполнение команды для всех файлов
         :return:
         """
+        self.create_file_list()
         for i in range(len(self._files)):
             full_name = os.path.join(self._files[i].path, self._files[i].name)
             self.action(full_name)
