@@ -1,31 +1,15 @@
 import subprocess
+from src.actions.DefaultAction import DefaultAction
 
 
-class Action:
+class AsciiDocGenerateHtmlAction(DefaultAction):
     """
     Выполняет действия при изменении файла
     Данный класс будет выполнять разные задачи
     """
     def __init__(self):
-        self._command = None
+        super().__init__()
         self.command = "asciidoctor -r asciidoctor-diagram -a nofooter -a linkcss {0}"
-
-    @property
-    def command(self):
-        """
-        Команда для выполнения
-        :return:
-        """
-        return self._command
-
-    @command.setter
-    def command(self, cmd):
-        """
-        Устанавливает команду для выполнения
-        :param cmd:
-        :return:
-        """
-        self._command = cmd
 
     def update(self, monitor):
         """

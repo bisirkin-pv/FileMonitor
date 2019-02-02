@@ -1,8 +1,6 @@
 import unittest
 from src.monitor.Monitor import Monitor
 import os
-from src.monitor.Action import Action
-from src.monitor.DefaultAction import DefaultAction
 
 
 class TestMonitorWorking(unittest.TestCase):

@@ -3,7 +3,7 @@ import sys
 import argparse
 import time
 import os
-from src.monitor.Action import Action
+from src.actions.AsciiDocGenerateHtmlAction import AsciiDocGenerateHtmlAction
 
 
 class FileMonitor:
@@ -33,7 +33,7 @@ class FileMonitor:
                         'set_timeout': self.set_timeout,
                         'timeout': self.get_timeout,
                         }
-        self._action = Action()  # Обрабатываемое событие
+        self._action = AsciiDocGenerateHtmlAction()  # Обрабатываемое событие
 
     def _param_parser(self):
         """
