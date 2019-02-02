@@ -3,7 +3,7 @@ import sys
 import argparse
 import time
 import os
-from src.actions.AsciiDocGenerateHtmlAction import AsciiDocGenerateHtmlAction
+from src.actions.BashAction import BashAction
 
 
 class FileMonitor:
@@ -33,7 +33,8 @@ class FileMonitor:
                         'set_timeout': self.set_timeout,
                         'timeout': self.get_timeout,
                         }
-        self._action = AsciiDocGenerateHtmlAction()  # Обрабатываемое событие
+        # Выполняемое действие при изменении
+        self._action = BashAction("asciidoctor -r asciidoctor-diagram -a nofooter -a linkcss {}")
 
     def _param_parser(self):
         """

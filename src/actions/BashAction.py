@@ -2,20 +2,22 @@ import subprocess
 from src.actions.DefaultAction import DefaultAction
 
 
-class AsciiDocGenerateHtmlAction(DefaultAction):
+class BashAction(DefaultAction):
     """
     Выполняет действия при изменении файла
     Данный класс будет выполнять разные задачи
     """
-    def __init__(self):
+    def __init__(self, cmd):
         super().__init__()
-        self.command = "asciidoctor -r asciidoctor-diagram -a nofooter -a linkcss {0}"
+        self.command = cmd
 
     def update(self, monitor):
         """
         Текущая задача выполнять генерацию html документации asciidoc
         :return:
         """
+        if monitor.value == '':
+            return
         cmd = self.command.format(monitor.value)
         try:
             subprocess.run(cmd,

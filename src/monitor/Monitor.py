@@ -126,3 +126,10 @@ class Monitor(Observed):
         for i in range(len(self._files)):
             self.value = os.path.join(self._files[i].path, self._files[i].name)
 
+    def update(self, model):
+        """
+        Метод для поддержки интерфейса наблюдателя
+        :param model:
+        :return:
+        """
+        self.refresh()

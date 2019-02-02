@@ -19,6 +19,6 @@ class Server(Thread):
 
     def check(self):
         """Проверка изменения файлов"""
-        while self._monitor._state == 1:
+        while self._monitor.get_state().get('state') == 1:
             self._monitor.check()
             time.sleep(self._monitor.get_timeout())
