@@ -7,9 +7,19 @@ class Action:
     Данный класс будет выполнять разные задачи
     """
     def __init__(self):
-        self._command = "asciidoctor -r asciidoctor-diagram -a nofooter -a linkcss {0}"
+        self._command = None
+        self.command = "asciidoctor -r asciidoctor-diagram -a nofooter -a linkcss {0}"
 
-    def set_command(self, cmd):
+    @property
+    def command(self):
+        """
+        Команда для выполнения
+        :return:
+        """
+        return self._command
+
+    @command.setter
+    def command(self, cmd):
         """
         Устанавливает команду для выполнения
         :param cmd:
@@ -17,19 +27,12 @@ class Action:
         """
         self._command = cmd
 
-    def get_command(self):
-        """
-        Команда для выполнения
-        :return:
-        """
-        return self._command
-
-    def run(self, file):
+    def update(self, monitor):
         """
         Текущая задача выполнять генерацию html документации asciidoc
         :return:
         """
-        cmd = self._command.format(file)
+        cmd = self.command.format(monitor.value)
         try:
             subprocess.run(cmd,
                            check=True,

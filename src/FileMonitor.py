@@ -33,6 +33,7 @@ class FileMonitor:
                         'set_timeout': self.set_timeout,
                         'timeout': self.get_timeout,
                         }
+        self._action = Action()  # Обрабатываемое событие
 
     def _param_parser(self):
         """
@@ -49,7 +50,7 @@ class FileMonitor:
         :return:
         """
         if self._monitor.get_state().get('state') == 0:
-            self._monitor.set_action(Action)
+            self._monitor.observers_add(self._action)
             self._monitor.start()
             self._timeout()
         else:
@@ -62,6 +63,7 @@ class FileMonitor:
         """
         if self._monitor.get_state().get('state') == 1:
             self._monitor.stop()
+            self._monitor.observer_disable(self._action)
             self._timeout()
         else:
             print("Server is already stopped")
@@ -127,19 +129,15 @@ class FileMonitor:
         :param cmd: команда для bash
         :return:
         """
-        action = self._monitor.get_action()
-        if hasattr(action, 'set_command'):
-            cmd = input("Input command:")
-            action.set_command(cmd)
+        cmd = input("Input command:")
+        self._action.command = cmd
 
     def get_action_command(self):
         """
         Отображает текущую комманду
         :return:
         """
-        action = self._monitor.get_action()
-        if hasattr(action, 'get_command'):
-            print("Current command: {}".format(action.get_command()))
+        print("Current command: {}".format(self._action.command))
 
     def set_timeout(self):
         """

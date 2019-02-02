@@ -4,19 +4,30 @@ import re
 from src.monitor.FileProperty import FileProperty
 import os
 from pathlib import Path
-from src.monitor.DefaultAction import DefaultAction
+from src.utilities.Observed import Observed
 
 
-class Monitor:
+class Monitor(Observed):
     """
     Класс осуществляет наблюдение за изменениями файлов
     """
     def __init__(self, re_files):
-        self._state = 0             # состояние сервера  (1 - запущен, 0 - остановлен, другое - ошибка)
-        self._timeout = 5           # таймаут между итерациями (секунд)
-        self._re_files = re_files   # регулярное выражение поиска файлов
-        self._files = []            # список параметров файлов
-        self._action = DefaultAction()     # класс выполняющий действия, можно менять
+        super().__init__()
+        self._state = 0               # состояние сервера  (1 - запущен, 0 - остановлен, другое - ошибка)
+        self._timeout = 5             # таймаут между итерациями (секунд)
+        self._re_files = re_files     # регулярное выражение поиска файлов
+        self._files = []              # список параметров файлов
+        self.__change_file_name = ""  # Имя измененного файла
+        self.value = ""
+
+    @property
+    def value(self):
+        return self.__change_file_name
+
+    @value.setter
+    def value(self, value):
+        self.__change_file_name = value
+        self.observers_notify()
 
     def start(self):
         """
@@ -69,6 +80,7 @@ class Monitor:
         Наполняем список наблюдаемых файлов
         :return:
         """
+        self._files = []
         path, extension = os.path.split(self._re_files)
         home = str(Path.home())
         path = path.replace('~', home)
@@ -99,7 +111,7 @@ class Monitor:
             full_name = os.path.join(self._files[i].path, self._files[i].name)
             changed = time.ctime(os.path.getmtime(full_name))
             if changed != self._files[i].change_date:
-                self.action(full_name)
+                self.value = full_name
                 self._files[i] = FileProperty(self._files[i].path,
                                               self._files[i].name,
                                               changed
@@ -112,29 +124,5 @@ class Monitor:
         """
         self.create_file_list()
         for i in range(len(self._files)):
-            full_name = os.path.join(self._files[i].path, self._files[i].name)
-            self.action(full_name)
+            self.value = os.path.join(self._files[i].path, self._files[i].name)
 
-    def set_action(self, Cls):
-        """
-        Присваивает класс обработки
-        :param Cls: класс обработки
-        :return:
-        """
-        self._action = Cls()
-
-    def get_action(self):
-        """
-        Возвращет класс действия
-        :return:
-        """
-        return self._action
-
-    def action(self, file):
-        """
-        Выполняет заданные действия
-        :param file: название файла
-        :return:
-        """
-        self._action.run(file)
-        # print("File {0} was changed".format(file))

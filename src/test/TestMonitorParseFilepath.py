@@ -1,6 +1,8 @@
 import unittest
 from src.monitor.Monitor import Monitor
 import os
+from src.monitor.Action import Action
+from src.monitor.DefaultAction import DefaultAction
 
 
 class TestMonitorWorking(unittest.TestCase):
@@ -15,6 +17,10 @@ class TestMonitorWorking(unittest.TestCase):
         self.monitor.create_file_list()
         files = self.monitor.get_file_list()
         self.assertEqual(len(files), 2)
+        # action = Action()
+        # defaultAction = DefaultAction()
+        # self.monitor.observers_add(defaultAction, action)
+        # self.monitor.refresh()
 
     def create_test_files(self):
         for name in self.filename_list:
