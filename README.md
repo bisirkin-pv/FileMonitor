@@ -31,9 +31,9 @@ $ python FileMonitor.py -p "path/mask"
 * `DefaultAction` - Шаблон действия
 * `AsciiDocGenerateHtmlAction` - Действие по обновлению документации в формате asciiDoc в формат html
 
-### Пакет utilites
+### Пакет utilities
 
-Пакет **utilites** содержит вспомогательные классы.
+Пакет **utilities** содержит вспомогательные классы.
 
 * `Observed` - базовый класс для поддержки оповещения при изменениях.
 
