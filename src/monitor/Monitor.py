@@ -88,7 +88,7 @@ class Monitor:
         :return: 1- совпадение найдено иначе 0
         """
         pattern = re.compile(reg)
-        return 1 if pattern.match(file) is not None else 0
+        return 1 if pattern.search(file) is not None else 0
 
     def check(self):
         """
